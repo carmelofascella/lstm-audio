@@ -1,13 +1,13 @@
 ## This script trains an LSTM according
 ## to the method described in 
 ## A. Wright, E.-P. Damskägg, and V. Välimäki, ‘Real-time black-box modelling with recurrent neural networks’, in 22nd international conference on digital audio effects (DAFx-19), 2019, pp. 1–8.
-import myk_data
-import myk_models
-import myk_loss 
-import myk_train
+import lstm_data
+import lstm_models
+import lstm_loss 
+import lstm_train
 import torch 
 from torch.utils.data import DataLoader
-import myk_evaluate
+import lstm_evaluate
 import os 
 import sys 
 #argument parser
@@ -46,15 +46,15 @@ writer = SummaryWriter(comment=expt_desc)
 
 print("Loading dataset from folder ", audio_folder)
 
-dataset = myk_data.generate_dataset(audio_folder + "/input/", 
+dataset = lstm_data.generate_dataset(audio_folder + "/input/", 
                                     audio_folder + "/output/", 
                                     frag_len_seconds=0.5)
 
 print("Splitting dataset")
-train_ds, val_ds, test_ds = myk_data.get_train_valid_test_datasets(dataset, splits=[0.8, 0.1, 0.1])
+train_ds, val_ds, test_ds = lstm_data.get_train_valid_test_datasets(dataset, splits=[0.8, 0.1, 0.1])
 
 print("Looking for GPU power")
-device = myk_train.get_device()
+device = lstm_train.get_device()
 # device = 'cpu'
 
 print("Creating data loaders")
@@ -64,7 +64,7 @@ val_dl = DataLoader(val_ds, batch_size=batch_size, shuffle=True)
 test_dl = DataLoader(test_ds, batch_size=batch_size, shuffle=True)
 
 print("Creating model")
-model = myk_models.SimpleLSTM(hidden_size=lstm_hidden_size).to(device)
+model = lstm_models.SimpleLSTM(hidden_size=lstm_hidden_size).to(device)
 
 print("Creating optimiser")
 # https://github.com/Alec-Wright/Automated-GuitarAmpModelling/blob/main/dist_model_recnet.py
@@ -80,7 +80,7 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimiser,
 
 print("Creating loss functions")
 # https://github.com/Alec-Wright/CoreAudioML/blob/bad9469f94a2fa63a50d70ff75f5eff2208ba03f/training.py
-loss_functions = myk_loss.LossWrapper()
+loss_functions = lstm_loss.LossWrapper()
 # now the training loop
 
 print("About to train")
@@ -92,10 +92,10 @@ os.makedirs(os.path.dirname(model_save_dir), exist_ok=True)
     
 for epoch in range(max_epochs):
     # ep_loss = myk_train.train_epoch_interval(model, train_dl, loss_functions, scheduler, device=device)
-    ep_loss = myk_train.train_epoch_interval(model, train_dl, loss_functions, optimiser, device=device)
+    ep_loss = lstm_train.train_epoch_interval(model, train_dl, loss_functions, optimiser, device=device)
     
     #ep_loss = myk_train.train_epoch(model, train_dl, loss_functions, optimiser, device=device)
-    val_loss = myk_train.compute_batch_loss(model, val_dl, loss_functions, device=device)
+    val_loss = lstm_train.compute_batch_loss(model, val_dl, loss_functions, device=device)
     writer.add_scalar("Loss/val", val_loss, epoch)
     writer.add_scalar("Loss/train", ep_loss, epoch)
     
@@ -121,7 +121,7 @@ for epoch in range(max_epochs):
         pth_file = model_save_dir + 'lstm_size_' + str(lstm_hidden_size) + '_epoch_' + str(epoch) + "_loss_" + str(round(val_loss, 4)) + ".pth"
         torch.save(model, pth_file)
         # run some audio through the model and save as wav
-        myk_evaluate.run_file_through_model(model, test_file, model_save_dir + "/" + str(epoch)+".wav", device=device)
+        lstm_evaluate.run_file_through_model(model, test_file, model_save_dir + "/" + str(epoch)+".wav", device=device)
     if best_loss: # rtneural json save is always the best yet 
         model.save_for_rtneural(model_save_dir+"rtneural_model_lstm_"+str(lstm_hidden_size)+".json")
  

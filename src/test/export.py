@@ -2,9 +2,13 @@
 ## in torchscript format 
 
 import torch
-import myk_models
+import sys
+sys.path.insert(1, 'src/')
+import lstm_models
 
-saved_pth_path = 'python/runs/Jan14_14-20-50_Carmelos-Macbook.local ssl-32-unit LSTM model with 32 hidden units/saved_models/lstm_size_32_epoch_32_loss_0.0036.pth'
+# replace saved_pth_path with your own.
+saved_pth_path = 'runs/Jan22_12-13-57_Carmelos-Macbook.local ssl-32-unit LSTM model with 32 hidden units/saved_models/lstm_size_32_epoch_0_loss_0.1876.pth'
+
 export_pt_path = 'dist_32.pt'
 
 # model = myk_models.SimpleLSTM(hidden_size=32)
