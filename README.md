@@ -7,6 +7,22 @@ This repository handles training and exporting the weights of a LSTM model which
 The network architecture is based on ‘Real-time black-box modelling with recurrent neural networks’ by A. Wright, E.-P. Damskägg, and V. Välimäki. <br>
 The used LSTM has 32 hidden layers.
 
+### How to use
+
+To train it on your local machine:
+
+1. Create a virtual environment and install the requirements
+
+```
+conda create --name <env_name> python=3.10
+conda activate <env_name>
+pip install -r requirements.txt
+```
+
+2. Run `python src/main.py`
+
+If you want to use Google Colab, use the `notebook.ipynb`
+
 ### Dataset
 
 To train the neural network we need an input and output dataset. <br>
