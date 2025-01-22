@@ -1,7 +1,19 @@
 # LSTM - audio
 
 This repository handles training and exporting the weights of a LSTM model which emulates distorion effects and amplifier circuits. <br>
-The network architecture is based on ‘Real-time black-box modelling with recurrent neural networks’ by A. Wright, E.-P. Damskägg, and V. Välimäki.
+
+### Neural Network
+
+The network architecture is based on ‘Real-time black-box modelling with recurrent neural networks’ by A. Wright, E.-P. Damskägg, and V. Välimäki. <br>
+The used LSTM has 32 hidden layers.
+
+### Dataset
+
+To train the neural network we need an input and output dataset. <br>
+Input dataset: clean audio signal. <br>
+Output Dataset: the same input signal processed through the amplifier we want to emulate. <br>
+You can find a sample dataset in the `dataset/input` and `dataset/output` folders. <br>
+Feel free to experiment with your own audio files.
 
 ### References
 
